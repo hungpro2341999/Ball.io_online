@@ -343,7 +343,7 @@ public class Enemy : MonoBehaviour
                     }
                     else
                     {
-                      Type_Chance =   CHANGE_VELOCITY.NONE;
+                      Type_Chance = CHANGE_VELOCITY.NONE;
                     }
 
                     switch (Type_Chance)
@@ -373,7 +373,7 @@ public class Enemy : MonoBehaviour
                       
 
                    // ICanNotDead();
-                    body.AddForce(DirectMove * Speed*Time.deltaTime*Length, ForceModeWhenMove);
+                    body.AddForce((DirectMove*Random.Range(0,3)) * Speed*Time.fixedDeltaTime*Length, ForceModeWhenMove);
 
 
 
@@ -479,19 +479,19 @@ public class Enemy : MonoBehaviour
         return false;
         }
     public bool isColling = false;
-        public void MoveBack(GameObject player,Vector3 direct)
+        public void MoveBack(GameObject player,Vector3 direct,Enemy enemy)
         {
         StopAllCoroutines();
         isMoveLimit = false;
         isDodge = false;
         isRunAway = false;
-        float ForcePlayer = player.GetComponent<Enemy>().Force;
-        float weightPlayer = player.GetComponent<Enemy>().weight;
-        float BoundPlayer = player.GetComponent<Enemy>().Bound;
+        float ForcePlayer = enemy.GetComponent<Enemy>().Force;
+       
+        float BoundPlayer = enemy.GetComponent<Enemy>().Bound;
      
       
         float ForceBack = 0;
-        ForceBack = Mathf.Clamp((ForcePlayer + Force)*Length*1.2f,MinForce,Mathf.Infinity);
+        ForceBack = (ForcePlayer + Force)*Length*1.2f;
     
 
       
@@ -503,19 +503,20 @@ public class Enemy : MonoBehaviour
   
         if (gameObject.tag == "Player")
         {
-          
+            Debug.Log(DirectMove + "  " + ForcePlayer + "  " + Force + "  " + Length + " " + BoundPlayer);
+            Debug.Log((ForcePlayer + Force) * Length * 1.2f);
             AddForce((DirectMove * ForceIntertion), ForceModeWhenInteraction, ForceIntertion);
+        
+            
         }
         else
         {
+            Debug.Log(DirectMove + "  " + ForcePlayer + "  " + Force + "  " + Length + " " + BoundPlayer);
+            Debug.Log((ForcePlayer + Force) * Length * 1.2f);
             AddForce((DirectMove * ForceIntertion), ForceModeWhenInteraction, ForceIntertion);
+        
+
         }
-           
-           
-
-
-
-
         }
    
     
@@ -559,11 +560,10 @@ public class Enemy : MonoBehaviour
           
             Vector3 direct = (pos - pos1).normalized;
             direct = new Vector3(direct.x, 0, direct.z);
-          //  Debug.Log(direct);
-            //  Debug.Log(gameObject.name +"  "+ "Coll");
-            MoveBack(gameObject,direct);
+            Debug.Log("Hit");
+            MoveBack(gameObject,direct,collision.gameObject.GetComponent<Enemy>());
           
-          //  Instantiate(SpawnEffect.Instance.getEffectName("Hit"), collision.collider.ClosestPointOnBounds(transform.position), Quaternion.identity, null);
+          Instantiate(SpawnEffect.Instance.getEffectName("Hit"), collision.collider.ClosestPointOnBounds(transform.position), Quaternion.identity, null);
         }
      
     }
@@ -967,7 +967,7 @@ public class Enemy : MonoBehaviour
 
 
 
-                DirectMove = (new Vector3(Target.transform.position.x, 0, Target.transform.position.z) - new Vector3(transform.position.x, 0, transform.position.z)).normalized;
+                DirectMove = (new Vector3(Target.transform.position.x, 0, Target.transform.position.z) - new Vector3(transform.position.x, 0, transform.position.z)).normalized * 1.3f;
 
             }
         }
@@ -1290,7 +1290,7 @@ public class Enemy : MonoBehaviour
                     {                        
 
                         player[index] = hits[i].collider.gameObject.GetComponent<Player>();
-                        Debug.Log(gameObject.name + "   " + index);
+                     //   Debug.Log(gameObject.name + "   " + index);
                         index++;
                     }
 
@@ -1440,26 +1440,28 @@ public class Enemy : MonoBehaviour
     public void Warring_Limit()
     {
         index_Limit = 0;
-        float Percent = this.Percent/5;
-        for(int i = 0; i < 5; i++)
+        if (DistanceFromLimitNeart() >= 0 && DistanceFromLimitNeart() < 0.5f)
         {
-            if (i != 4)
-            {
-                if (DistanceFromLimitNeart() > i * Percent && DistanceFromLimitNeart() < (i + 1) * Percent)
-                {
-                    index_Limit = i;
-                    i++;
-                    break;
-                }
-
-            }
-            else if(i==4)
-            {
-                index_Limit = i++;
-                break;
-            }
+            index_Limit = 1;
+        }
+        else if (DistanceFromLimitNeart() >= 0.5f && DistanceFromLimitNeart() < 1)
+        {
+            index_Limit = 2;
+        }
+        else if (DistanceFromLimitNeart() >= 1f && DistanceFromLimitNeart() < 1.5f)
+        {
+            index_Limit = 3;
+        }
+        else if (DistanceFromLimitNeart() >= 1.5f && DistanceFromLimitNeart() < 2)
+        {
+            index_Limit = 4;
+        }
+        else
+        {
+            index_Limit = 5;
 
         }
+
         Swapped_To_Enmu_Limit_Level((int)index_Limit);
     }
 
@@ -1467,35 +1469,6 @@ public class Enemy : MonoBehaviour
     {
 
     }
-
-
-    public void Swapped_To_Enmu_Power(int level)
-    {
-        switch (level)
-        {
-            case 1:
-                type_power = POWER.LV1;
-                break;
-            case 2:
-                type_power = POWER.LV2;
-                break;
-            case 3:
-                type_power = POWER.LV3;
-                break;
-            case 4:
-                type_power = POWER.LV4;
-                break;
-            case 5:
-                type_power = POWER.LV5;
-                break;
-            
-               
-        }
-
-
-    }
-
-
     public void Swapped_To_Enmu_Limit_Level(int level)
     {
         switch (level)
@@ -1529,6 +1502,35 @@ public class Enemy : MonoBehaviour
 
     }
 
+    public void Swapped_To_Enmu_Power(int level)
+    {
+        switch (level)
+        {
+            case 1:
+                type_power = POWER.LV1;
+                break;
+            case 2:
+                type_power = POWER.LV2;
+                break;
+            case 3:
+                type_power = POWER.LV3;
+                break;
+            case 4:
+                type_power = POWER.LV4;
+                break;
+            case 5:
+                type_power = POWER.LV5;
+                break;
+            
+               
+        }
+
+
+    }
+
+
+  
+
     private void OnDrawGizmos()
     {
         if (Target != null)
@@ -1545,52 +1547,7 @@ public class Enemy : MonoBehaviour
         }
        
 
-        /*
-        
-        for (int i = 0; i < ListRay.Count; i++)
-        {
-         //   Debug.Log("Finddd "+i);
-           
-        }
-       float x = transform.position.x;
-        float y = transform.position.y;
-        float z = transform.position.z;
-        Vector3 pos = new Vector3(x, transform.position.y, z);
-        Ray ray_check = new Ray(new Vector3(x,transform.position.y,z), new Vector3(0, 0, 1));
-        Gizmos.DrawRay(ray_check);
-        int j = 0;
-        RaycastHit hit_2;
-        GameObject game;
-        while(Physics.Raycast(new Ray(new Vector3(x,y, z), new Vector3(0, 0, 1)),out hit_2,distance,MaskPlayer))
-        {
-            game = hit_2.collider.gameObject;
-            Debug.Log(game.name);
-
-            x = game.transform.position.x;
-            y= game.transform.position.y;
-            z = game.transform.position.z;
-          
-            Gizmos.DrawLine(transform.position, game.transform.position);
-            Gizmos.color = Color.black;
-            Gizmos.DrawRay(new Ray(new Vector3(x, transform.position.y, z), new Vector3(0, 0, 1)));
-            j += 1;
-            /*
-            if (Physics.Raycast(new Ray(new Vector3(x, y, z), new Vector3(0, 0, 1)), out hit_2, distance, MaskPlayer)){
-                game = hit_2.collider.gameObject;
-                x = game.transform.position.x;
-                y = game.transform.position.y;
-                z = game.transform.position.z;
-                Gizmos.DrawLine(transform.position, game.transform.position);
-            }
-            if (Physics.Raycast(new Ray(new Vector3(x, y, z), new Vector3(0, 0, 1)), out hit_2, distance, MaskPlayer))
-            {
-                game = hit_2.collider.gameObject;
-                x = game.transform.position.x;
-                y = game.transform.position.y;
-                z = game.transform.position.z;
-                Gizmos.DrawLine(transform.position, game.transform.position);
-            }
-               */
+      
 
        
     }

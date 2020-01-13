@@ -108,6 +108,7 @@
     <Compile Include="Assets\UI\Windown.cs" />
     <Compile Include="Assets\VisibleInforBall.cs" />
     <Compile Include="Assets\VisibleInforPlayer.cs" />
+    <Compile Include="Assets\WaitForStart.cs" />
     <None Include="Assets\FX Quest\!Readme.txt" />
     <None Include="Assets\Pokemon XY\Pikachu\Tag.txt" />
     <None Include="Assets\Minions\IMPORTANT!.txt" />

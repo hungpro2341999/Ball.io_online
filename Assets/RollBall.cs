@@ -8,10 +8,9 @@ public class RollBall : Enemy
 
    
     public Vector2 posMouse;
-    public float moveSpeed = 2f;
+  
     public Vector3 direct;
-    public Vector3 Velocity;
-    public Vector3 targetPosition;
+   
     public bool isClick1 = false;
     public bool isClick2 = false;
    
@@ -26,12 +25,6 @@ public class RollBall : Enemy
     public Vector3 LastDirect=Vector2.zero;
     // Velocity
   
-    public ForceMode ForceModeMoce;
-    public ForceMode ForceModeInteracable;
-    public float maxVelocity;
-    public float LerpTime;
-    public float SpeedVelocityStart;
-    public float SpeedVelocityMax;
     public float SpeedVelocity;
     public float SpeedNode;
     public float SpeedRoll = 3;
@@ -55,11 +48,7 @@ public class RollBall : Enemy
     //GoBack
     public bool isGoBack = false;
 
-    // Strenght
-  //  public float Bound = 1.25f;
- //   public float Force;
-   // public float Strenght;
-  //  public float Mass = 2;
+   
     private void Awake()
     {
 
@@ -188,7 +177,7 @@ void Start()
                 if (Input.GetMouseButtonUp(0))
                 {
                     isClick1 = false;
-                    LerpTime = 0;
+                
                     ClearRecover();
 
                 }
@@ -208,7 +197,7 @@ void Start()
             {
                 
                 isClick1 = false;
-                LerpTime = 0;
+               
                 ClearRecover();
 
             }
@@ -242,9 +231,9 @@ void Start()
     {
 
         isMoveBack = true;
-        body.AddForce((Direct*Force),ForceModeInteracable);
+        body.AddForce((Direct*Force),ForceModeWhenInteraction);
         isClick1 = false;
-        LerpTime = 0;
+        
         ClearRecover();
         //    Debug.Log(-getDirect() * SpeedVelocity);
         // ClearRecover();
@@ -357,6 +346,8 @@ void Start()
                 
     }
 
+    
+
     public Vector3 DetectDirect(List<Vector3> listPoint)
 
     {
@@ -376,19 +367,11 @@ void Start()
     public void MoveToWardMouse()
     {
        
-       
-
-      
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-           
-              
                 DirectMove = new Vector3(DirectMove.x, 0, DirectMove.y);
 
             
 
-            body.AddForce(DirectMove * SpeedVelocity*Time.deltaTime*Length, ForceModeMoce);
+            body.AddForce(DirectMove.normalized * SpeedVelocity*Time.deltaTime*Length,ForceModeWhenMove);
             //  Body.AddForce(new Vector3(LastDirect.x * SpeedVelocity, 0, -LastDirect.y * SpeedVelocity));
             // Body.AddForce(LastDirect* SpeedVelocity,ForceMode.VelocityChange);
             //   Debug.Log("ADD FORCE_1");

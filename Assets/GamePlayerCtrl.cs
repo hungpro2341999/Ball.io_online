@@ -6,6 +6,7 @@ public enum StatusGame { Play,Pause,Out_Game,Wait,Reset,Game_Over,Watching,End_G
 public class GamePlayerCtrl : MonoBehaviour
 {
     public static GamePlayerCtrl Instance;
+    public Transform WaitForStart;
     public Mutiply_Screen Windown;
     public VisibleInforPlayer visible;
     public StatusGame Status = StatusGame.Wait;
@@ -124,31 +125,33 @@ public class GamePlayerCtrl : MonoBehaviour
 
     public void Start_Game()
     {
-
-       
+        Status = StatusGame.Wait;
+        DestroyAll();
         InforMap inforMap = GameObject.Find("Map").GetComponent<InforMap>();
         Radius = inforMap.Radius;
         Ground = inforMap.Ground;
         Count_Player = DataMananger.Instance.CountPlayer;
+        WaitForStart.GetComponent<WaitForStart>().Start_Waitting();
         Reset_Game();
         StartCoroutine(Wait_Start_Game());
 
     }
     public IEnumerator Wait_Start_Game()
     {
-        Status = StatusGame.None;
+       
         isGamePause = true;
         isGameOver = true;
         for(int i = 0; i < player.Length; i++)
         {
             player[i].GetComponent<Rigidbody>().isKinematic = true;
         }
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(4);
         for (int i = 0; i < player.Length; i++)
         {
             player[i].GetComponent<Rigidbody>().isKinematic = false;
         }
-        Status = StatusGame.Play;
+
+      
         isGameOver = false;
         isGamePause = false;
     }
@@ -184,14 +187,14 @@ public class GamePlayerCtrl : MonoBehaviour
                     count++;
                 }
             }
-            if (count == 1)
+            if (count <= 1)
             {
                 isWin = true;
             }
 
             return isWin;
         }
-        else
+        else 
         {
             return true;
         }
@@ -288,34 +291,6 @@ public class GamePlayerCtrl : MonoBehaviour
     }
     public void Reset_Game()
     {
-      
-        DestroyAll();
-        for(int i=0; i<Count_Player; i++)
-        {
-            bool Accpect = false;
-            while (!Accpect)
-            {
-                Vector3 pos = Random.insideUnitCircle * Radius;
-                pos = new Vector3(pos.x, Ground + OffSet, pos.y);
-                if (Physics.SphereCast(new Ray(pos,transform.up),0.75f, 0, MaskPlayer))
-                {
-                   Accpect = false;
-                }
-                else
-                {
-                    var a = Instantiate(AI, pos, Quaternion.identity, Parent);
-                    a.name = "AI_" + i;
-                    a.GetComponent<InforPlayer>().SetInfor();
-                    Accpect = true;
-                   
-                }
-            }
-           
-           
-         
-            
-            
-        }
         bool Accpect1 = false;
         while (!Accpect1)
         {
@@ -336,10 +311,52 @@ public class GamePlayerCtrl : MonoBehaviour
                 visible.Init();
             }
         }
+
+        for (int i=0; i<Count_Player; i++)
+        {
+            
+            bool Accpect = false;
+            
+            while (!Accpect)
+            {
+                Vector3 pos = Random.insideUnitCircle * Radius;
+                pos = new Vector3(pos.x, Ground + OffSet, pos.y);
+                if (Physics.SphereCast(new Ray(pos,transform.up),0.75f, 0, MaskPlayer))
+                {
+                   Accpect = false;
+                    Debug.Log(" NOT OK");
+
+                }
+                else
+                {
+                    Debug.Log("OK");
+
+                    StartCoroutine(Spawn_Player(Time.fixedDeltaTime *3*i,pos,i));
+                    Accpect = true;
+                   
+                   
+                }
+            }
+           
+           
+         
+            
+            
+        }
+      
        
      
        
 
+    }
+    public IEnumerator Spawn_Player(float time,Vector3 pos,int i)
+    {
+        yield return new WaitForSeconds(time);
+
+        var a = Instantiate(AI, pos, Quaternion.identity, Parent);
+
+        a.name = "AI_" + i;
+        a.GetComponent<InforPlayer>().SetInfor();
     }
 
     public void Claim()
