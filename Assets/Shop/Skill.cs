@@ -7,10 +7,16 @@ public enum Type_Skill { TEXTTURE, MODEL }
 
 public class Skill : ScriptableObject
 {
-    public int id;
+    public List<GameObject> ListModel;
+    public List<Infor_Skill> List_infor_Skill;
+    public List<int> Cost;
+
+  
+    public bool isBuy = false;
+    public bool isUse = false;
     public Type_Skill Type_Skill;
     public Sprite ImgSkill;
     public Material Material;
     public GameObject Model;
-    
+    public int SkillUse;
 }

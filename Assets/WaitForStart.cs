@@ -37,8 +37,8 @@ public class WaitForStart : MonoBehaviour
 
     public IEnumerator EnableString(float time,int i)
     {
-      
-       
+
+         
        
             yield return new WaitForSeconds(time);
             text.text = List[i];
@@ -57,7 +57,12 @@ public class WaitForStart : MonoBehaviour
 
         yield return new WaitForSeconds(time);
         GamePlayerCtrl.Instance.Status = StatusGame.Play;
+        GamePlayerCtrl.Instance.isGameOver = false;
+        GamePlayerCtrl.Instance.isGamePause = false;
+        GamePlayerCtrl.Instance.Init_Infor();
         text.text = "";
+        gameObject.SetActive(false);
+       
     }
 
 

@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class DataMananger : MonoBehaviour
 {
     public static DataMananger Instance = null;
 
     #region Data
-    public List<Skill> Data_Skills;
+    public Skill Data_Skills;
     public BotNameData Data_Bot;
     public List<Process_Player> Data_List_Player = new List<Process_Player>();
     public int CountPlayer = 4;
+    public int Coin;
     [SerializeField ]int index = 0;
     [SerializeField] int index_1 = 0;
     #endregion
@@ -21,7 +23,9 @@ public class DataMananger : MonoBehaviour
 
     public const string Key_Sound = "Key_Sound";
     public const string Key_Variable = "Key_Var";
-
+    public const string Key_Shop = "Key_Shop";
+    public const string Key_Coin = "Key_Coin";
+    public const string Key_Name = "Key_Name";
     #endregion
 
     #region 
@@ -31,6 +35,11 @@ public class DataMananger : MonoBehaviour
 
     #endregion
 
+    #region Transform
+    public Text m_Coin;
+
+
+    #endregion
     #region Option__Sound_Variable
     private void Awake()
     {
@@ -69,8 +78,81 @@ public class DataMananger : MonoBehaviour
             IsMute = PlayerPrefs.GetInt(Key_Sound);
         }
 
+        //  INIT SHOP
+      //   PlayerPrefs.DeleteKey(Key_Shop);
+        if (!PlayerPrefs.HasKey(Key_Shop))
+        {
+          List<Infor_Skill> lists = new List<Infor_Skill>();
+
+            for(int i = 0; i < Data_Skills.ListModel.Count; i++)
+            {
+                if (i != 0)
+                {
+                    Infor_Skill skill = new Infor_Skill(i, false, false,DataMananger.Instance.Data_Skills.Cost[i]);
+                    lists.Add(skill);
+                    
+
+                }
+                else
+                {
+
+                    Infor_Skill skill = new Infor_Skill(i, true, true, DataMananger.Instance.Data_Skills.Cost[i]);
+                    lists.Add(skill);
+                }
+               
+                    
+            }
+
+
+            List_Infor_Skill Save_list = new List_Infor_Skill(lists);
+            string key =  JsonUtility.ToJson(Save_list);
+            PlayerPrefs.SetString(Key_Shop, key);
+            PlayerPrefs.Save();
+            Data_Skills.List_infor_Skill = lists;
+           
+           List_Infor_Skill Save_list_1 = JsonUtility.FromJson<List_Infor_Skill>(PlayerPrefs.GetString(Key_Shop));
+            Debug.Log("CO SKIN : " + Save_list_1.lists.Count);
+
+        }
+        else
+        {
+            List<Infor_Skill> list = JsonUtility.FromJson<List_Infor_Skill>(PlayerPrefs.GetString(Key_Shop)).lists;
+            Load_To_ScriptableObject(list);
+          
+
+
+
+        }
+
+        //////////
+        //////////
+        ///
+
+        //Init Coin
+        PlayerPrefs.DeleteKey(Key_Coin);
+        if (!PlayerPrefs.HasKey(Key_Coin))
+        {
+            PlayerPrefs.SetInt(Key_Coin,999999);
+            PlayerPrefs.Save();
+            m_Coin.text = Get_Coin();
+            Coin = PlayerPrefs.GetInt(Key_Coin);
+        }
+        else
+        {
+            Coin = PlayerPrefs.GetInt(Key_Coin);
+            m_Coin.text = Get_Coin();
+
+        }
 
     }
+    public void Load_To_ScriptableObject(List<Infor_Skill> skills)
+    {
+        Data_Skills.List_infor_Skill = skills;
+
+    }
+
+
+
     public int Is_Mute()
     {
         return PlayerPrefs.GetInt(Key_Sound);
@@ -109,6 +191,46 @@ public class DataMananger : MonoBehaviour
 
     }
     #endregion
+
+    public void Save_Coin(int coin)
+    {
+        PlayerPrefs.SetInt(Key_Coin, coin);
+        PlayerPrefs.Save();
+    }
+    public string Get_Coin()
+    {
+      return  PlayerPrefs.GetInt(Key_Coin).ToString();
+       
+    }
+    public int Get_Coin_Current()
+    {
+        return PlayerPrefs.GetInt(Key_Coin);
+
+    }
+    public void Add_Coin(int coin)
+    {
+        this.Coin += coin;
+        Save_Coin(this.Coin);
+        m_Coin.text = Get_Coin();
+       
+    }
+    public void Earn_Coin(int coin)
+    {
+        this.Coin -= coin;
+        Save_Coin(this.Coin);
+        m_Coin.text = this.Coin.ToString();
+    }
+    public void Set_Coin(int coin)
+    {
+        Save_Coin(coin);
+    }
+    public void Save_Shop(List<Infor_Skill> skills)
+    {
+        string key = JsonUtility.ToJson(skills);
+        PlayerPrefs.SetString(Key_Shop, key);
+        PlayerPrefs.Save();
+        
+    } 
 
     private void Update()
     {

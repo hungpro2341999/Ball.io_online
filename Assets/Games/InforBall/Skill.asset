@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fc81355e5e3f8e49ae5c5ec42712b8d, type: 3}
+  m_Name: Skill
+  m_EditorClassIdentifier: 
+  ListModel:
+  - {fileID: 6639103548201645969, guid: 899650a03aec15148996de1be97f29b4, type: 3}
+  - {fileID: 7536613414418104648, guid: 9407641988b985043848d3c7bf3e0ede, type: 3}
+  - {fileID: 6647725211042661907, guid: c21fed92f1dd37940a6954770f1a0c17, type: 3}
+  - {fileID: 5538487676359424035, guid: 293a71445444d8343aaa40a35383ae45, type: 3}
+  - {fileID: 614719329325889427, guid: 8c4a22457f5a96d4595b95fc877623ed, type: 3}
+  - {fileID: 6962728108210589439, guid: 8a9ff7df9866343418a45f85ed0307aa, type: 3}
+  - {fileID: 5028191052970477249, guid: d043f408e36b59f4fb59d1d09e028c54, type: 3}
+  - {fileID: 2377157702214463859, guid: 9486aadb23b57a846a5fb32dba67594d, type: 3}
+  - {fileID: 4889062020938304586, guid: f17511c4b8997f14ba55dd22a0710c8d, type: 3}
+  - {fileID: 4695093639731909875, guid: 65176d4633659d8489cf03807b92ae36, type: 3}
+  - {fileID: 1104661444464491880, guid: de5b1f3a759ef744484f8584311ee52c, type: 3}
+  - {fileID: 8717794009322746255, guid: 32a53e2aff569a647bf0a9abc7115636, type: 3}
+  - {fileID: 6752990729322572832, guid: b7ec9c3fffbfcf041a9a6fa3a53c0a06, type: 3}
+  - {fileID: 7798404265473798059, guid: f64b539e6b2bfdd45ba66c1aa720677f, type: 3}
+  - {fileID: 3494607524495736580, guid: cac73e90a08c24741b610f5a8abaffc3, type: 3}
+  - {fileID: 6299694023684760913, guid: 58fdc4300f5125b45aedb1ea1674b21c, type: 3}
+  - {fileID: 176736630578612721, guid: cfb4d5cd5927c14489c043fcc5a39111, type: 3}
+  - {fileID: 3179819536074501916, guid: cacae55f9953a4b4a951d3ec59e7bbc7, type: 3}
+  - {fileID: 1547132624382216704, guid: f2c3fdaf966975544a380a0c6956602a, type: 3}
+  - {fileID: 2360497361332863634, guid: 6bb9fcc9ab7975a4b9f6710de03b99e9, type: 3}
+  - {fileID: 6227608347714038807, guid: a578825493df6594a92090acf90dfc8f, type: 3}
+  - {fileID: 4112837141579948132, guid: 2aa0c977b9d3a384ea3cc53cd0438eaa, type: 3}
+  - {fileID: 5310549791508624721, guid: 241f34246d4f7ae4ba252bdca8b65949, type: 3}
+  - {fileID: 1721697368511113189, guid: 860424203a1639840aa8d643dd20b980, type: 3}
+  List_infor_Skill: []
+  Cost: 640000006400000064000000c80000009808000064000000640000006400000064000000c8000000c80000002c0100009001000008020000c90000006400000078000000c9000000d200000041010000780000006600000078000000fc030000
+  isBuy: 0
+  isUse: 0
+  Type_Skill: 0
+  ImgSkill: {fileID: 0}
+  Material: {fileID: 0}
+  Model: {fileID: 2360497361332863634, guid: 6bb9fcc9ab7975a4b9f6710de03b99e9, type: 3}
+  SkillUse: 0

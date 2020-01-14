@@ -57,6 +57,7 @@ public class GameMangaer : MonoBehaviour
             if(w.Type_Screen == screen)
             {
                 w.Open_Screen();
+                
             }
         }
     }

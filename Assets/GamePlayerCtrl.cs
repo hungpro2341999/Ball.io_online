@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum StatusGame { Play,Pause,Out_Game,Wait,Reset,Game_Over,Watching,End_Game,None}
+public enum StatusGame { Play,Pause,Out_Game,Wait,Reset,Game_Over,Watching,End_Game,None,Back_To_Game}
 public class GamePlayerCtrl : MonoBehaviour
 {
     public static GamePlayerCtrl Instance;
@@ -81,10 +81,18 @@ public class GamePlayerCtrl : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if(Status == StatusGame.Back_To_Game) 
+        {
+            GamePlayerCtrl.Instance.Event_Over_Game();
+            GameMangaer.Instance.Open_Screen(Screen_Type.Screen_Start);
+            Status = StatusGame.None;
+
+        }
         if(Status == StatusGame.Out_Game)
         {
             if (Is_End_Game())
             {
+                
                 Status = StatusGame.End_Game;
                 Debug.Log("END_GAME");
                 Windown.CloseWindow(Windown_Type.End_Game);
@@ -125,6 +133,7 @@ public class GamePlayerCtrl : MonoBehaviour
 
     public void Start_Game()
     {
+        WaitForStart.gameObject.SetActive(true);
         Status = StatusGame.Wait;
         DestroyAll();
         InforMap inforMap = GameObject.Find("Map").GetComponent<InforMap>();
@@ -133,28 +142,10 @@ public class GamePlayerCtrl : MonoBehaviour
         Count_Player = DataMananger.Instance.CountPlayer;
         WaitForStart.GetComponent<WaitForStart>().Start_Waitting();
         Reset_Game();
-        StartCoroutine(Wait_Start_Game());
-
-    }
-    public IEnumerator Wait_Start_Game()
-    {
        
-        isGamePause = true;
-        isGameOver = true;
-        for(int i = 0; i < player.Length; i++)
-        {
-            player[i].GetComponent<Rigidbody>().isKinematic = true;
-        }
-        yield return new WaitForSeconds(4);
-        for (int i = 0; i < player.Length; i++)
-        {
-            player[i].GetComponent<Rigidbody>().isKinematic = false;
-        }
 
-      
-        isGameOver = false;
-        isGamePause = false;
     }
+    
     public bool Is_Game_OVer()
     {
         if (Main_Player != null)
@@ -166,6 +157,7 @@ public class GamePlayerCtrl : MonoBehaviour
             }
             else
             {
+                
                 isGameOver = false;
             }
             return isGameOver;
@@ -184,6 +176,7 @@ public class GamePlayerCtrl : MonoBehaviour
             {
                 if (player[i].GetComponent<Enemy>().isGround)
                 {
+                    Debug.Log(player[i].name + " " + "Out");
                     count++;
                 }
             }
@@ -207,16 +200,26 @@ public class GamePlayerCtrl : MonoBehaviour
         
         player = GameObject.FindObjectsOfType<Player>();
         Debug.Log("COUNT :" + player.Length);
-        for (int i = 0; i < Count_Player; i++)
+        for (int i = 0; i < player.Length; i++)
         {
-            if(player[i].tag == "Player")
+            if(player[i].name  == "Player" || player[i].tag == "Player")
             {
                 Main_Player = player[i];
-               
-                break;
+
+            }
+            else
+            {
+                
+                Debug.Log("REMOVE : "+i +"     "+ player[i].name);
             }
 
         }
+        for (int i = 0; i < player.Length; i++)
+        {
+            player[i].GetComponent<Rigidbody>().isKinematic = false;
+        }
+
+
     }
 
     // Update is called once per frame
@@ -307,14 +310,12 @@ public class GamePlayerCtrl : MonoBehaviour
                 a1.name = "Player";
                 a1.GetComponent<InforPlayer>().SetInfor();
                 Accpect1 = true;
-                InitGame();
-                visible.Init();
+            
             }
         }
 
         for (int i=0; i<Count_Player; i++)
         {
-            
             bool Accpect = false;
             
             while (!Accpect)
@@ -337,16 +338,8 @@ public class GamePlayerCtrl : MonoBehaviour
                    
                 }
             }
-           
-           
-         
-            
-            
         }
       
-       
-     
-       
 
     }
     public IEnumerator Spawn_Player(float time,Vector3 pos,int i)
@@ -357,6 +350,7 @@ public class GamePlayerCtrl : MonoBehaviour
 
         a.name = "AI_" + i;
         a.GetComponent<InforPlayer>().SetInfor();
+     
     }
 
     public void Claim()
@@ -365,9 +359,17 @@ public class GamePlayerCtrl : MonoBehaviour
     }
     
 
-    
-  
-    
+    public void Init_Infor()
+    {
+        InitGame();
+        visible.Init();
+
+    }
+
+    public void Back_To_Game()
+    {
+        Status = StatusGame.Back_To_Game;
+    }
 
 
 }

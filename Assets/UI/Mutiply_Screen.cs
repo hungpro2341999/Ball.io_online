@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Windown_Type {Start,Shop,Setting,Quest,Play,Revice,Game_Over,Rank,End_Game}
+public enum Windown_Type {Start,Shop,Setting,Quest,Play,Revice,Game_Over,Rank,End_Game,Wait_For_Start}
 public enum Screen_Type {Screen_Start,Screen_Play,Screen_loading}
 
 public class Mutiply_Screen : MonoBehaviour
@@ -18,11 +18,13 @@ public class Mutiply_Screen : MonoBehaviour
         {
             case Screen_Type.Screen_Start:
 
-                CloseAll(Windown_Type.Start);
+                 CloseAll(Windown_Type.Start);
+                GamePlayerCtrl.Instance.Event_Over_Game += End_Game_Start;
                 break;
             case Screen_Type.Screen_Play:
 
                 CloseAll(Windown_Type.Play);
+                GamePlayerCtrl.Instance.Event_Over_Game += End_Game_Play;
                 break;
             case Screen_Type.Screen_loading:
 
@@ -32,11 +34,19 @@ public class Mutiply_Screen : MonoBehaviour
     }
     void Start()
     {
-        
+       
        
     }
-
+    public void End_Game_Start() 
     
+    {
+        CloseAll(Windown_Type.Start);
+    }
+    public void End_Game_Play()
+
+    {
+        CloseAll(Windown_Type.Play);
+    }
 
     // Update is called once per frame
     public  void CloseAll(Windown_Type type)
@@ -77,9 +87,16 @@ public class Mutiply_Screen : MonoBehaviour
         {
             if(w.type == windown.type)
             {
-                Debug.Log("Open");
+             
                 windown.Open();
             }
+            else
+            {
+                Debug.Log("Close");
+                w.Close();
+            }
+
+
         }
     }
     public void OpenWindow(Windown_Type windown)
@@ -88,18 +105,25 @@ public class Mutiply_Screen : MonoBehaviour
         {
             if (w.type == windown)
             {
-                Debug.Log("Open");
+             
                 w.Open();
             }
+          
         }
     }
+
+    
     public void CloseWindow(Windown windown)
     {
         foreach (Windown w in Windows)
         {
             if (w.type == windown.type)
             {
-                windown.Close();
+                w.Close();
+            }
+            else
+            {
+                w.Open();
             }
         }
     }

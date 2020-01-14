@@ -101,6 +101,8 @@
     <Compile Include="Assets\Player.cs" />
     <Compile Include="Assets\Point.cs" />
     <Compile Include="Assets\RollBall.cs" />
+    <Compile Include="Assets\Shop\Infor_Skill.cs" />
+    <Compile Include="Assets\Shop\List_Infor_Skill.cs" />
     <Compile Include="Assets\Shop\Shop_Mananger.cs" />
     <Compile Include="Assets\Shop\Skill.cs" />
     <Compile Include="Assets\SpawnEffect.cs" />
